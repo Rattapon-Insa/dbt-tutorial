@@ -1,5 +1,13 @@
 version: 2
 
+sources:
+  - name: jaffle_shop
+    schema: jaffle_shop
+    tables:
+      - name: payment
+      - name: orders
+      - name: customers
+
 models:
   - name: enrich_customers
     description: One record per customer
@@ -20,6 +28,23 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_payment
+    description: payment product
+    columns:
+      - name: amount
+        description: total amount of each order by order id
+        tests:
+          - not_null
+          - is_even
+
+      - name: orderid
+        description: order id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
 
   - name: stg_orders
     description: This model cleans up order data
